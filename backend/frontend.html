@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Task Planner</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>🧠 Smart Task Planner AI</h1>
+
+    <div class="input-group">
+        <input type="text" id="goalInput" placeholder="e.g., Launch a product in 2 weeks" required>
+        <button id="submitGoal">Generate Plan</button>
+    </div>
+
+    <div id="loading">Generating plan with AI... Please wait.</div>
+    <div id="output">
+        </div>
+</div>
+
+<script>
+    const API_URL = 'http://127.0.0.1:8000/generate_plan'; // Ensure this matches your FastAPI port
+
+    document.getElementById('submitGoal').addEventListener('click', async () => {
+        const goalText = document.getElementById('goalInput').value.trim();
+        const outputDiv = document.getElementById('output');
+        const loadingDiv = document.getElementById('loading');
+
+        if (!goalText) {
+            alert("Please enter a goal to plan!");
+            return;
+        }
+
+        outputDiv.innerHTML = '';
+        loadingDiv.style.display = 'block';
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ goal_text: goalText }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.detail || 'Failed to generate plan.');
+            }
+
+            const plan = await response.json();
+            displayPlan(plan);
+
+        } catch (error) {
+            outputDiv.innerHTML = `<p style="color: red;">Error: ${error.message}. Ensure your backend API is running.</p>`;
+            console.error('Fetch Error:', error);
+        } finally {
+            loadingDiv.style.display = 'none';
+        }
+    });
+
+    function displayPlan(plan) {
+        const outputDiv = document.getElementById('output');
+        let html = `
+            <div class="plan-summary">
+                <h2>Plan for: ${plan.goal}</h2>
+                <p><strong>Total Estimated Duration:</strong> ${plan.total_duration_days} days</p>
+                <p><strong>Generated on:</strong> ${new Date().toLocaleDateString()}</p>
+            </div>
+            <h3>Detailed Task Breakdown:</h3>
+        `;
+
+        plan.tasks.forEach(task => {
+            const deadline = new Date(task.suggested_deadline).toLocaleDateString();
+            const dependencies = task.dependency_ids && task.dependency_ids.length > 0
+                ? `Requires: Task(s) ${task.dependency_ids.join(', ')}`
+                : 'No Dependencies';
+
+            html += `
+                <div class="task-card">
+                    <span class="task-id">TASK ${task.task_id}:</span>
+                    <span class="task-description">${task.description}</span>
+                    <div class="task-detail">
+                        Estimated Duration: **${task.estimated_duration_days} days** | 
+                        Suggested Deadline: **${deadline}**
+                    </div>
+                    <div class="task-detail">
+                        ${dependencies}
+                    </div>
+                </div>
+            `;
+        });
+
+        outputDiv.innerHTML = html;
+    }
+</script>
+
+</body>
+</html>
