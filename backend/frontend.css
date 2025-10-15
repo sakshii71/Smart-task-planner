@@ -1,0 +1,104 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 900px;
+}
+
+h1 {
+    color: #007bff;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Input and Button */
+#goalInput {
+    width: 80%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px 0 0 8px;
+    font-size: 16px;
+}
+
+#submitGoal {
+    width: 20%;
+    padding: 12px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+#submitGoal:hover {
+    background-color: #218838;
+}
+
+.input-group {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+/* Task List Display */
+#output {
+    margin-top: 20px;
+}
+
+.plan-summary {
+    background-color: #e9f7ff;
+    border-left: 5px solid #007bff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+}
+
+.task-card {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.task-id {
+    font-weight: bold;
+    color: #007bff;
+    margin-right: 10px;
+}
+
+.task-description {
+    font-weight: bold;
+    color: #333;
+}
+
+.task-detail {
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+/* Loading State */
+#loading {
+    text-align: center;
+    color: #007bff;
+    font-weight: bold;
+    display: none; /* Hidden by default */
+    margin-top: 20px;
+}
